@@ -1,0 +1,64 @@
+*{
+  margin : 0;
+  padding: 0;
+}
+body{
+  font-family: 'Poppin';
+  color: #fff;
+  background-color : #000;
+  height: 100%;
+  
+}
+.form{
+  height: 70vh;
+  width: 32%;
+  position: absolute;
+  top: 10%;
+  margin: auto;
+  left: 35%;
+  background-color:#000;
+  border-radius: 50px;
+  
+}
+
+.profileSetup{
+  height: 70vh;
+  width: 40%;
+  position: absolute;
+  margin-left: 30%;
+  margin-top: 15vh;
+  background-color:#000;
+  border-radius: 50px;
+}
+
+@media (max-width : 850px){
+  .form{
+    width:  42%;
+  }
+}
+@media (max-width : 600px){
+  .form{
+    width:  65%;
+    height: 80vh;
+    left : 17.5%;
+  }
+}
+@media (max-width : 900px) {
+  .profileSetup {
+    height: 80%;
+    width : 50%;
+    margin-top: 10%;
+    margin-left: 25%;
+  }
+}
+@media (max-width : 550px){
+  .profileSetup{
+    width: 85%;
+    margin-left: 7.5%;
+  }
+}
+
+[contenteditable=true]:empty:before{
+  content : attr(placeholder);
+  color : rgba(255, 255, 255, 0.5);
+}
