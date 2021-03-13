@@ -201,7 +201,7 @@ const ProfileHandler = (props) =>{
     useEffect(()=>{
         getProfile();
         getTweetCount()
-    }, [props.auth])
+    }, [props.auth, getProfile, getTweetCount])
     return(
         user && profile && follow!=null?
         <Container>

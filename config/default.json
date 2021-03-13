@@ -1,5 +1,6 @@
 {
-    "username" : "<username>",
-    "password" : "<password>",
-    "jwtsecret" : "<key>"
+    "username" : "root",
+    "password" : "twitterClone123",
+    "jwtsecret" : "t0ps3cr3t5tuff",
+    "database" : "twitterClone"
 }

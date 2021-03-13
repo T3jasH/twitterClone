@@ -233,7 +233,6 @@ const TweetsList = props => {
     const getTrendTweets = (hashtag) =>{
         axios.get(`/api/tweet/trends/${hashtag}`)
         .then(res =>{
-            {
                 setTweetStore(res.data);
                 const dict = {};
                 const likesCountDict = {};
@@ -254,7 +253,6 @@ const TweetsList = props => {
                 setLike(dict);
                 setLikesCount(likesCountDict);
                 setRepliesCount(repliesCountDict);
-            }
         })
     }
     useEffect(()=>{

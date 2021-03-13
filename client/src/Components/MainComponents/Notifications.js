@@ -39,7 +39,7 @@ const Notifications = (props) =>{
         if(props.auth !== undefined){
         getNotifications();
         }
-    }, [] )
+    }, [getNotifications] )
     return (
         <Container>
             <ReturnTop>

@@ -5,11 +5,11 @@ let dbConfig = {
   connectionLimit: 0, // default 10
   waitForConnections : true,
   queueLimit : 0,
-  host: process.env.MYSQL_HOST || "localhost" ,
-  user: "root",
+  host: "twitterclonemysql.cw4b8gjl3wn9.us-east-2.rds.amazonaws.com" ,
+  user: config.get("username"),
   password: config.get("password"),
-  database: "testbase",
-  timezone : "+05:30"
+  database: config.get("database"),
+  timezone : "+0530"
 };
 const pool = mysql.createPool(dbConfig);
 const connection = () => {

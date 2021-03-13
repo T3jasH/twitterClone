@@ -172,7 +172,7 @@ const TweetHandler = props =>{
     useEffect(()=>{
         if(props.match.params.id && props.auth.user.username)
         getTweetById(props.match.params.id)
-    }, [props.match.params.id, props.auth.user.username])
+    }, [props.match.params.id, props.auth.user.username, getTweetById])
     return(
         tweet?
         <Container>

@@ -192,7 +192,7 @@ const LandingPage = (props) =>{
                 setError(props.err.msg);
             }
             if(props.isAuthenticated) window.location.reload();
-        }, [props.err.msg, props.isAuthenticated]
+        }, [props.err.msg, props.isAuthenticated, prevMsg]
     )
     const onChange = (e) =>{
         switch(e.target.name){
@@ -256,7 +256,7 @@ const LandingPage = (props) =>{
 }
 
 LandingPage.propTypes = {
-    isAuthenticated : PropTypes.bool.isRequired,
+    isAuthenticated : PropTypes.bool,
     login : PropTypes.func.isRequired,
     err : PropTypes.object.isRequired
 }

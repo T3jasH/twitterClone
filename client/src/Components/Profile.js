@@ -242,6 +242,7 @@ const ProfileUpload = props =>{
       }
     }, [props.profile])
     const displayDeleteBtn = (date) =>{
+       console.log(date)
        const year = date[0] + date[1] + date[2] + date[3];
        var month = date[5] + date[6];
        month--;
@@ -249,7 +250,6 @@ const ProfileUpload = props =>{
        const sentTime = new Date(year, month, day, date[11]+ date[12], date[14]+ date[15], 0, 0).getTime()/ (1000*60);
        const current = Date.now()/(1000*60);
        var dif = current - sentTime;
-       console.log(dif)
        return dif > 60 ;
     }
     const onChange = (e) =>{

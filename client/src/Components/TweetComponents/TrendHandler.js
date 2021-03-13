@@ -1,6 +1,6 @@
 import TweetsList from '../TweetComponents/TweetsList'
 import styled from 'styled-components'
-import {Button, ReturnTop, InnerContainer, Emp} from '../TweetComponents/TweetHandler'
+import {Button, ReturnTop, InnerContainer} from '../TweetComponents/TweetHandler'
 
 const Container = styled.div`
     width : 100%;

@@ -16,7 +16,8 @@ import LandingPage from './Components/LandingPage';
 function App(){
   useEffect(
     ()=>{
-      store.dispatch(loadUser());
+      if(localStorage.length)
+        store.dispatch(loadUser());
     },
     []
   )

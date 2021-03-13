@@ -44,11 +44,11 @@ router.post('/register', async (req, res)=>{
     const connection = await mysql.connection();
     
     
-    const user = await connection.query("SELECT * FROM USER WHERE username = ?", username)
+    const user = await connection.query("SELECT * FROM user WHERE username = ?", username)
     if(user[1]) console.log(user[1])
     if(user[0])  return res.status(400).json({msg : "Username already taken"})
 
-    const mail = await connection.query("SELECT * FROM USER WHERE email = ?", email)
+    const mail = await connection.query("SELECT * FROM user WHERE email = ?", email)
     if(mail[1]) console.log(mail[1])
     if(mail[0])  return res.status(400).json({msg : "Email already taken"})
 
@@ -56,7 +56,7 @@ router.post('/register', async (req, res)=>{
         if(err) throw err;
         bcrypt.hash(password, salt, async (err, hash)=>{
             if(err) throw err;
-            const query = await connection.query("INSERT INTO USER (name, username, email, password, joined) VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP)", [name, username, email, hash]);
+            const query = await connection.query("INSERT INTO user (name, username, email, password, joined) VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP)", [name, username, email, hash]);
             jwt.sign({id : username}, config.get("jwtsecret"), (err, token)=>{
                 if(err) throw err
                 res.json({
@@ -111,7 +111,7 @@ router.post('/login', async (req, res)=>{
 // GET current user
 router.get('/user', auth, async (req, res)=>{
     const connection = await mysql.connection();
-    const query = await connection.query("SELECT * FROM USER WHERE username = ?", req.user.id);
+    const query = await connection.query("SELECT * FROM user WHERE username = ?", req.user.id);
     if(query[1]) return console.log(query[1])
     if(query[0]){
         res.json(query[0])

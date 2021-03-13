@@ -12,7 +12,7 @@ app.use('/api/upload', require('./routes/api/uploadProfile'));
 app.use('/api/tweet', require('./routes/api/tweet'));
 app.use('/api/search', require('./routes/api/search'));
 app.use('/api/notifications', require('./routes/api/notifications'))
-const port = process.env.PORT||5000;
+const port = 5000;
 
 app.listen(port, ()=> console.log(`Connected to port ${port}`));
 
