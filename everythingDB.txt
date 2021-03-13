@@ -1,0 +1,108 @@
+PROCEDURES
+
+delimiter //
+
+create PROCEDURE deleteUser(user_id varchar(15))
+begin
+update user set followers_cnt = followers_cnt - 1 where username in ( select user as username from follow where followed_by = user_id ) ;
+update user set following_cnt = following_cnt - 1 where username in ( select followed_by as username from follow where user = user_id) ;
+update tweet set replies_cnt = replies_cnt - 1 where id in ( select reply_to as id from replies where reply_by = user_id ) ;
+update tweet set likes_cnt = likes_cnt - 1 where id in ( select id from likes where liked_by = user_id );
+delete from user where username = user_id;
+end //
+
+create PROCEDURE sendReply( user varchar(15), cont varchar(160), reply_to_id varchar(200), reply_tid varchar(200), img varchar(200), senttime datetime)
+begin
+insert into tweet (id, username, content, image, sent_time) values (reply_tid, user, cont, img, senttime);
+insert into replies (reply_to, reply_id, reply_by) values (reply_to_id, reply_tid, user);
+end //
+
+create PROCEDURE updateFollow(in id varchar(15), in follower varchar(15), in state int)
+begin
+if state = 1 then insert into follow values(id, follower);
+update user set followers_cnt = followers_cnt + 1 where username = id;
+update user set following_cnt = following_cnt + 1 where username = follower;
+else delete from follow where user = id && followed_by = follower;
+update user set followers_cnt = followers_cnt - 1 where username = id;
+update user set following_cnt = following_cnt - 1 where username = follower;
+end if;
+end //
+
+create PROCEDURE updateLikes( isLike int, tweet_id varchar(200), likedBy varchar(15) )
+begin
+if isLike = 1 then update tweet set likes_cnt = likes_cnt + 1 where id = tweet_id;
+insert into likes (id, liked_by) values (tweet_id, likedBy) ;
+else update tweet set likes_cnt = likes_cnt - 1 where id = tweet_id;
+delete from likes where id = tweet_id && liked_by = likedBy ;
+end if ; 
+end
+
+delimiter ;
+
+
+TABLES
+
+create table user (
+    username varchar(15) primary key,
+    email varchar(35) not null unique,
+    name varchar(25) not null,
+    password char(60) not null,
+    following_cnt int default 0,
+    followers_cnt int default 0,
+    isVerified tinyint(1) default 0,
+    about varchar(160),
+    joined datetime, 
+    display_pic varchar(200),
+    cover_pic varchar(200)
+);
+
+create table tweet (
+    id varchar(200) primary key,
+    username varchar(15),
+    content varchar(160),
+    sent_time datetime not null,
+    likes_cnt int default 0,
+    replies_cnt int default 0,
+    image varchar(200),
+    foreign key(username) references user(username) on update cascade on delete cascade
+);
+
+create table likes (
+    id varchar(200),
+    liked_by  varchar(15),
+    foreign key(id) references tweet(id) on update cascade on delete cascade,
+    foreign key(liked_by) references user(username) on update cascade on delete cascade
+);
+
+create table follow (
+    user varchar(15),
+    followed_by varchar(15),
+    foreign key(user) references user(username) on update cascade on delete cascade,
+    foreign key(followed_by) references user(username) on update cascade on delete cascade
+);
+
+create table trends (
+    hashtag varchar(30) not null,
+    tweet_id varchar(200),
+    foreign key(tweet_id) references tweet(id) on update cascade on delete cascade
+);
+
+create table notifications (
+    id int primary key auto_increment,
+    type int not null,
+    user_to varchar(15),
+    user_from varchar(15),
+    tweet_id varchar(200),
+    sent_time datetime,
+    seen tinyint
+);
+
+create table replies (
+    reply_to varchar(200),
+    reply_id varchar(200),
+    reply_by varchar(15),
+    foreign key(reply_to) references tweet(id) on update cascade on delete cascade,
+    foreign key(reply_id) references tweet(id) on update cascade on delete cascade,
+    foreign key(reply_by) references user(username) on update cascade on delete cascade
+);
+
