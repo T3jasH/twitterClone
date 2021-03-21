@@ -1,6 +1,6 @@
 {
     "username" : "root",
-    "password" : "@1mVkohli",
+    "password" : "",
     "jwtsecret" : "t0ps3cr3t5tuff",
-    "database" : "testbase"
+    "database" : "twitterClone"
 }
