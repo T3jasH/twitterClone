@@ -203,8 +203,8 @@ const ProfileHandler = (props) =>{
         }
         
         getProfile();
-        getTweetCount()
-    }, [])
+        getTweetCount();
+    }, [props.auth.user.username, username])
     return(
         user && profile && follow!=null?
         <Container>

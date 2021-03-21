@@ -38,7 +38,7 @@ const Notifications = (props) =>{
             }
             getNotifications();
         }
-    }, [] )
+    }, [props.auth] )
     return (
         <Container>
             <ReturnTop>
