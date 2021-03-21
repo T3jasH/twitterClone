@@ -24,22 +24,21 @@ const Notification = styled.div`
 `
 const Notifications = (props) =>{
     const [notifList, setNotifList] = useState(null);
-
-    const getNotifications = () => {
-        axios.get('/api/notifications/list', getConfig(props.auth))
-        .then(res => {
-            if(res.data.length)
-            setNotifList(res.data)
-            else
-            setNotifList(null)
-        })
-        .catch(err => console.log(err))
-    }
     useEffect(()=>{
         if(props.auth !== undefined){
-        getNotifications();
+            const getNotifications = () => {
+                axios.get('/api/notifications/list', getConfig(props.auth))
+                .then(res => {
+                    if(res.data.length)
+                    setNotifList(res.data)
+                    else
+                    setNotifList(null)
+                })
+                .catch(err => console.log(err))
+            }
+            getNotifications();
         }
-    }, [getNotifications] )
+    }, [] )
     return (
         <Container>
             <ReturnTop>

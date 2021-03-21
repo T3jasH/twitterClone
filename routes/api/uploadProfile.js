@@ -44,6 +44,7 @@ router.post('/display', auth, dispUpload.single('display'), async (req, res)=>{
             req.user.id
         ]
         );
+        connection.release();
         if(JSON.parse(JSON.stringify(query)).changedRows) res.status(200).json({display : req.file.filename})
         else res.json({msg : "Failed"})
     }
@@ -92,6 +93,7 @@ router.post('/about', auth, async (req, res)=>{
         req.body.bio, 
         req.user.id
     ]);
+    connection.release();
     res.send({bio : req.body.bio})
     
 })

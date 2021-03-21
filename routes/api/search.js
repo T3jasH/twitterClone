@@ -12,6 +12,7 @@ router.post('/', async (req, res)=>{
         `${name}%`
     ]
     )
+    connection.release();
     res.json(query)
 })
 

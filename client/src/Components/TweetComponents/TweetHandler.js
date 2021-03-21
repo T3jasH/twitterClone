@@ -131,23 +131,7 @@ const TweetHandler = props =>{
     const [tweet, setTweet] = useState(null);
     const [like, setLike] = useState(null);
     const [likesCountMain, setLikesCountMain] = useState(null);
-    const getTweetById = id =>{
-        axios.post('/api/tweet/id', {id : id}, getConfig(props.auth))
-        .then(res => {
-            var result = res.data;
-            if(res.data.length === undefined) result = [res.data];
-            setTweet(result[0]);
-            setLikesCountMain(result[0].likes_cnt);
-            result.map((item, idx)=>{
-                if(item.liked_by === props.auth.user.username){
-                    setLike(true);
-                }
-                else if(!item.liked_by) setLike(false);
-                return null;
-            })
-        })
-        .catch(err => console.log(err))
-    }
+    
     const likeToggle = (id, likeStatus) =>{
         updateLike(!likeStatus, id, props);
         setLike(!likeStatus);
@@ -170,9 +154,27 @@ const TweetHandler = props =>{
         return hr+':'+mins+ ' ' + t +' · ' + months[month] + ' ' + day + ', ' + year;
      }
     useEffect(()=>{
-        if(props.match.params.id && props.auth.user.username)
+        if(props.match.params.id && props.auth.user.username){
+        const getTweetById = id =>{
+            axios.post('/api/tweet/id', {id : id}, getConfig(props.auth))
+            .then(res => {
+                var result = res.data;
+                if(res.data.length === undefined) result = [res.data];
+                setTweet(result[0]);
+                setLikesCountMain(result[0].likes_cnt);
+                result.map((item, idx)=>{
+                    if(item.liked_by === props.auth.user.username){
+                        setLike(true);
+                    }
+                    else if(!item.liked_by) setLike(false);
+                    return null;
+                })
+            })
+            .catch(err => console.log(err))
+        }
         getTweetById(props.match.params.id)
-    }, [props.match.params.id, props.auth.user.username, getTweetById])
+    }
+    }, [props.match.params.id, props.auth.user.username])
     return(
         tweet?
         <Container>

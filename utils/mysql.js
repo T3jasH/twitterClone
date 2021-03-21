@@ -5,7 +5,7 @@ let dbConfig = {
   connectionLimit: 0, // default 10
   waitForConnections : true,
   queueLimit : 0,
-  host: "twitterclonemysql.cw4b8gjl3wn9.us-east-2.rds.amazonaws.com" ,
+  host: "localhost" ,
   user: config.get("username"),
   password: config.get("password"),
   database: config.get("database"),
@@ -42,4 +42,4 @@ const connection = () => {
 //     });
 //   });
 
-module.exports = { pool, connection};
+module.exports = {pool, connection};

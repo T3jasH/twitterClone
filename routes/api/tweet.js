@@ -36,6 +36,7 @@ router.post('/', auth, imageUpload.single('image'), async (req, res)=>{
             req.user.id,
             content
         ]);
+        connection.release();
         if(JSON.parse(JSON.stringify(query)).affectedRows) res.json({tweet_id : tweet_id, user_to : null})
         else res.json({msg : "Failed"})
     }
@@ -48,6 +49,7 @@ router.post('/', auth, imageUpload.single('image'), async (req, res)=>{
              req.file.filename 
         ]
         );
+        connection.release();
         if(JSON.parse(JSON.stringify(query)).changedRows) res.status(200).json({image : req.file.filename})
         else res.json({msg : "Failed"})
     }
@@ -60,6 +62,7 @@ router.post('/', auth, imageUpload.single('image'), async (req, res)=>{
             content,
             req.file.filename
         ]);
+        connection.release();
         if(JSON.parse(JSON.stringify(query)).changedRows) res.json({tweet_id : tweet_id, user_to : null})
         else res.json({msg : "Failed"});
     }
@@ -78,6 +81,7 @@ router.post('/reply', auth, imageUpload.single('image'), async (req, res)=>{
     const query = await connection.query("CALL sendReply(?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
     [username, content, id, tweet_id, img]
     )
+    connection.release();
     res.json({tweet_id : tweet_id, user_to : null});
 })
 
@@ -87,6 +91,7 @@ router.post('/count', async (req, res)=>{
     const connection = await mysql.connection();
     const query = await connection.query("SELECT COUNT(id) FROM tweet WHERE username = ? " + 
     "AND id NOT IN (SELECT reply_id as id from replies where reply_by = ?);", [username, username]);
+    connection.release();
     if(query[1]) res.status(400).json(query[1])
     else {
         res.json({count : query[0]['COUNT(id)']});
@@ -103,6 +108,7 @@ router.get('/profile/:username', auth, async (req, res)=>{
     "left join user on tweet.username = user.username " + 
     "where tweet.username = ? and tweet.id not in (select reply_id as id from replies where reply_by = ?) " + 
     "order by tweet.sent_time desc", [username, username])
+    connection.release();
     res.json(query)
 })
 // GET tweets of accounts followed by the user
@@ -116,6 +122,7 @@ router.get('/following', auth, async (req, res)=>{
     "left join user on user.username = follow.user"+
     " where follow.followed_by = ? and tweet.id not in (select reply_id as id from replies) " +
     "order by tweet.sent_time desc", username);
+    connection.release();
     res.json(query);
 })
 //GET replies for an id
@@ -126,6 +133,7 @@ router.get('/replies/:id', auth, async (req, res)=>{
     "inner join replies on tweet.id = replies.reply_id "+ 
     "left join user on tweet.username = user.username " +
     "left join likes on tweet.id = likes.id where replies.reply_to = ?  order by tweet.sent_time desc", id);
+    connection.release();
     res.json(query);
 })
 //Update likes
@@ -133,6 +141,7 @@ router.post('/likes', auth, async(req, res)=>{
     const add = req.body.like ? 1 : -1 , likedBy = req.user.id, tweetId = req.body.id;
     const connection = await mysql.connection();
     const query = await connection.query("CALL updateLikes(?, ?, ?)", [add, tweetId, likedBy]);
+    connection.release();
     if(JSON.parse(JSON.stringify(query)).affectedRows) res.json({msg : "Success"})
     else res.status(400).json({msg : "Failed"})
 })
@@ -143,6 +152,7 @@ router.post('/id', auth, async (req, res)=>{
     const query = await connection.query("SELECT tweet.*, likes.liked_by, user.name, user.isverified, user.display_pic from tweet " +
     "left join user on tweet.username = user.username "+
     "left join likes on tweet.id = likes.id WHERE tweet.id = ?" , id)
+    connection.release();
     res.json(query);
 })
 //Post Trends
@@ -150,6 +160,7 @@ router.post('/trends', async (req, res)=>{
     const {hashtag, id} = req.body;
     const connection = await mysql.connection();
     const query = connection.query("INSERT INTO trends VALUES (?, ?)", [hashtag, id]);
+    connection.release();
     res.json({})
 })
 
@@ -162,6 +173,7 @@ router.get('/trends/:hashtag', async (req, res)=>{
     "INNER JOIN trends on tweet.id=trends.tweet_id " + 
     "INNER JOIN user on tweet.username = user.username " +
     "WHERE trends.hashtag= ? ORDER BY tweet.sent_time DESC", hashtag);
+    connection.release();
     res.json(query);
 })
 

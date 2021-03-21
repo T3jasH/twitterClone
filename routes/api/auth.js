@@ -57,6 +57,7 @@ router.post('/register', async (req, res)=>{
         bcrypt.hash(password, salt, async (err, hash)=>{
             if(err) throw err;
             const query = await connection.query("INSERT INTO user (name, username, email, password, joined) VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP)", [name, username, email, hash]);
+            connection.release();
             jwt.sign({id : username}, config.get("jwtsecret"), (err, token)=>{
                 if(err) throw err
                 res.json({
@@ -82,6 +83,7 @@ router.post('/login', async (req, res)=>{
     const connection = await mysql.connection();
 
     const user = await connection.query("SELECT * FROM user where email = ?", email);
+    connection.release();
     if(user[1]) return console.log(user[1]);
     if(!user[0]){
         return res.status(400).json({msg : "Email ID does not exist"});
@@ -112,6 +114,7 @@ router.post('/login', async (req, res)=>{
 router.get('/user', auth, async (req, res)=>{
     const connection = await mysql.connection();
     const query = await connection.query("SELECT * FROM user WHERE username = ?", req.user.id);
+    connection.release();
     if(query[1]) return console.log(query[1])
     if(query[0]){
         res.json(query[0])
@@ -123,6 +126,7 @@ router.post('/profile', async (req, res)=>{
     const username = req.body.username;
     const connection = await mysql.connection();
     const query = await connection.query("select user.*, follow.followed_by from user left join follow on user.username = follow.user where user.username = ? ", username);
+    connection.release();
     res.json(query)
     
 })
@@ -134,6 +138,7 @@ router.post('/follow', auth, async (req, res)=>{
     const follow = req.body.follow;
     const connection = await mysql.connection();
     const query = await connection.query("CALL updateFollow(?, ?, ?)", [username, curr, follow]);
+    connection.release();
     res.json({})
 })
 // Delete account
@@ -141,6 +146,7 @@ router.get('/delete', auth, async (req, res)=>{
     const id = req.user.id;
     const connection = await mysql.connection();
     const query = await connection.query("CALL deleteUser(?)", id);
+    connection.release();
     res.json({});
 })
 module.exports = router;

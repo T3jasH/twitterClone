@@ -154,110 +154,110 @@ const TweetsList = props => {
     const forceUpdate = () =>{
         return setDummy(dummy => dummy + 1);
     }
-    const getProfileTweets = (username) =>{
-    axios.get(`/api/tweet/profile/${username}`, getConfig(props.auth))
-        .then(res => {
-            setTweetStore(res.data);
-            const dict = {};
-            const likesCountDict = {};
-            const repliesCountDict = {};
-            res.data.map((item)=>{
-                if(item.liked_by === props.auth.user.username){
-                    dict[item.id] = 1;
-                }
-                else if( !(item.id in dict) ) {
-                    dict[item.id] = 0;
-                }
-                likesCountDict[item.id] = item.likes_cnt;
-                repliesCountDict[item.id] = item.replies_cnt;
-                return null;
-            })
-            setLike(dict);
-            setLikesCount(likesCountDict);
-            setRepliesCount(repliesCountDict);
-        })
-        .catch(err => console.log(err))
-    }
-    const getFollowingTweets = () =>{
-        axios.get('/api/tweet/following', getConfig(props.auth))
-        .then(res=>{
-            setTweetStore(res.data);
-            const dict = {};
-            const likesCountDict = {};
-            const repliesCountDict = {};
-            res.data.map((item)=>{
-                if(item.liked_by === props.auth.user.username){
-                    dict[item.id] = 1;
-                    likesCountDict[item.id] = item.likes_cnt;   
-                    repliesCountDict[item.id] = item.replies_cnt; 
-                }
-                else if( !(item.id in dict) ) {
-                    dict[item.id] = 0;
-                    likesCountDict[item.id] = item.likes_cnt;
-                    repliesCountDict[item.id] = item.replies_cnt;
-                }
-                return null;
-            })
-            setLike(dict);
-            setLikesCount(likesCountDict);
-            setRepliesCount(repliesCountDict);
-        })
-        .catch(err => console.log(err))
-    }
-    const getReplies = (id) => {
-        axios.get(`/api/tweet/replies/${id}`,  getConfig(props.auth))
-        .then(res => {
-            setTweetStore(res.data);
-            const dict = {};
-            const likesCountDict = {};
-            const repliesCountDict = {};
-            res.data.map((item)=>{
-                if(item.liked_by === props.auth.user.username){
-                    dict[item.id] = 1;
-                    likesCountDict[item.id] = item.likes_cnt;   
-                    repliesCountDict[item.id] = item.replies_cnt; 
-                }
-                else if( !(item.id in dict) ) {
-                    dict[item.id] = 0;
-                    likesCountDict[item.id] = item.likes_cnt;
-                    repliesCountDict[item.id] = item.replies_cnt;
-                }
-                return null;
-            })
-            setLike(dict);
-            setLikesCount(likesCountDict);
-            setRepliesCount(repliesCountDict);
-        })
-        .catch(err => console.log(err))
-    };
-    const getTrendTweets = (hashtag) =>{
-        axios.get(`/api/tweet/trends/${hashtag}`)
-        .then(res =>{
-                setTweetStore(res.data);
-                const dict = {};
-                const likesCountDict = {};
-                const repliesCountDict = {};
-                res.data.map((item)=>{
-                    if(item.liked_by === props.auth.user.username){
-                        dict[item.id] = 1;
-                        likesCountDict[item.id] = item.likes_cnt;   
-                        repliesCountDict[item.id] = item.replies_cnt; 
-                    }
-                    else if( !(item.id in dict) ) {
-                        dict[item.id] = 0;
-                        likesCountDict[item.id] = item.likes_cnt;
-                        repliesCountDict[item.id] = item.replies_cnt;
-                    }
-                    return null;
-                })
-                setLike(dict);
-                setLikesCount(likesCountDict);
-                setRepliesCount(repliesCountDict);
-        })
-    }
+    
     useEffect(()=>{
         setTweetStore(null);
-        
+        const getProfileTweets = (username) =>{
+            axios.get(`/api/tweet/profile/${username}`, getConfig(props.auth))
+                .then(res => {
+                    setTweetStore(res.data);
+                    const dict = {};
+                    const likesCountDict = {};
+                    const repliesCountDict = {};
+                    res.data.map((item)=>{
+                        if(item.liked_by === props.auth.user.username){
+                            dict[item.id] = 1;
+                        }
+                        else if( !(item.id in dict) ) {
+                            dict[item.id] = 0;
+                        }
+                        likesCountDict[item.id] = item.likes_cnt;
+                        repliesCountDict[item.id] = item.replies_cnt;
+                        return null;
+                    })
+                    setLike(dict);
+                    setLikesCount(likesCountDict);
+                    setRepliesCount(repliesCountDict);
+                })
+                .catch(err => console.log(err))
+            }
+            const getFollowingTweets = () =>{
+                axios.get('/api/tweet/following', getConfig(props.auth))
+                .then(res=>{
+                    setTweetStore(res.data);
+                    const dict = {};
+                    const likesCountDict = {};
+                    const repliesCountDict = {};
+                    res.data.map((item)=>{
+                        if(item.liked_by === props.auth.user.username){
+                            dict[item.id] = 1;
+                            likesCountDict[item.id] = item.likes_cnt;   
+                            repliesCountDict[item.id] = item.replies_cnt; 
+                        }
+                        else if( !(item.id in dict) ) {
+                            dict[item.id] = 0;
+                            likesCountDict[item.id] = item.likes_cnt;
+                            repliesCountDict[item.id] = item.replies_cnt;
+                        }
+                        return null;
+                    })
+                    setLike(dict);
+                    setLikesCount(likesCountDict);
+                    setRepliesCount(repliesCountDict);
+                })
+                .catch(err => console.log(err))
+            }
+            const getReplies = (id) => {
+                axios.get(`/api/tweet/replies/${id}`,  getConfig(props.auth))
+                .then(res => {
+                    setTweetStore(res.data);
+                    const dict = {};
+                    const likesCountDict = {};
+                    const repliesCountDict = {};
+                    res.data.map((item)=>{
+                        if(item.liked_by === props.auth.user.username){
+                            dict[item.id] = 1;
+                            likesCountDict[item.id] = item.likes_cnt;   
+                            repliesCountDict[item.id] = item.replies_cnt; 
+                        }
+                        else if( !(item.id in dict) ) {
+                            dict[item.id] = 0;
+                            likesCountDict[item.id] = item.likes_cnt;
+                            repliesCountDict[item.id] = item.replies_cnt;
+                        }
+                        return null;
+                    })
+                    setLike(dict);
+                    setLikesCount(likesCountDict);
+                    setRepliesCount(repliesCountDict);
+                })
+                .catch(err => console.log(err))
+            };
+            const getTrendTweets = (hashtag) =>{
+                axios.get(`/api/tweet/trends/${hashtag}`)
+                .then(res =>{
+                        setTweetStore(res.data);
+                        const dict = {};
+                        const likesCountDict = {};
+                        const repliesCountDict = {};
+                        res.data.map((item)=>{
+                            if(item.liked_by === props.auth.user.username){
+                                dict[item.id] = 1;
+                                likesCountDict[item.id] = item.likes_cnt;   
+                                repliesCountDict[item.id] = item.replies_cnt; 
+                            }
+                            else if( !(item.id in dict) ) {
+                                dict[item.id] = 0;
+                                likesCountDict[item.id] = item.likes_cnt;
+                                repliesCountDict[item.id] = item.replies_cnt;
+                            }
+                            return null;
+                        })
+                        setLike(dict);
+                        setLikesCount(likesCountDict);
+                        setRepliesCount(repliesCountDict);
+                })
+            }
         if(props.username && props.auth.user.username)
         getProfileTweets(props.username);
         else if(props.type === "replies")

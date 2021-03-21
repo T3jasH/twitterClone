@@ -142,37 +142,7 @@ const ProfileHandler = (props) =>{
         if(x>=1000 && x < 1000000) return parseInt(x/1000) + "K";
         return parseInt(x/1000000) + "M";
     }
-    const getProfile = () =>{
-        axios.post('/api/auth/profile',  {username : username})
-        .then(res =>{
-            var result=null;
-            if(res.data.length === undefined) result = [res.data]; 
-            else result = res.data;
-            const {name, email, username, display_pic, cover_pic, about, isVerified, joined, followers_cnt, following_cnt} = result[0];
-            if(!res.data) return
-            setUser({
-                name : name,
-                email : email, 
-                username : username});
-            setProfile({
-                display : display_pic, 
-                cover : cover_pic, 
-                about : about, 
-                isVerified : isVerified,
-                joined : joined,
-                followers : followers_cnt, 
-                following : following_cnt
-            });
-            result.map((item, idx)=>{
-                if(item.followed_by === props.auth.user.username) {
-                    setFollow(1);
-                }
-                else if(!follow) setFollow(0)
-                return null;
-            })
-        })
-        .catch(err => console.log(err));
-    }
+    
     const updateFollow = (state) =>{
         setFollow(state);
         axios.post('/api/auth/follow', {username : username, follow : state}, getConfig(props.auth))
@@ -185,13 +155,6 @@ const ProfileHandler = (props) =>{
         })
         .catch(err => console.log(err))
     }
-    const getTweetCount = () =>{
-        axios.post('/api/tweet/count', {username : username})
-        .then(res => {
-            setTweetCount(res.data.count)
-        })
-        .catch(err => console.log(err))
-    }
     const getJoinedDate = () =>{
         const date = profile.joined;
         const month = date[5] + date[6];
@@ -199,9 +162,49 @@ const ProfileHandler = (props) =>{
         return list[month-1] + ' ' + date[0]+date[1]+date[2]+date[3];
     }
     useEffect(()=>{
+        const getProfile = () =>{
+            axios.post('/api/auth/profile',  {username : username})
+            .then(res =>{
+                var result=null;
+                if(res.data.length === undefined) result = [res.data]; 
+                else result = res.data;
+                const {name, email, username, display_pic, cover_pic, about, isVerified, joined, followers_cnt, following_cnt} = result[0];
+                if(!res.data) return
+                setUser({
+                    name : name,
+                    email : email, 
+                    username : username});
+                setProfile({
+                    display : display_pic, 
+                    cover : cover_pic, 
+                    about : about, 
+                    isVerified : isVerified,
+                    joined : joined,
+                    followers : followers_cnt, 
+                    following : following_cnt
+                });
+                result.map((item, idx)=>{
+                    if(item.followed_by === props.auth.user.username) {
+                        setFollow(1);
+                    }
+                    else if(!follow) setFollow(0)
+                    return null;
+                })
+            })
+            .catch(err => console.log(err));
+        }
+        
+        const getTweetCount = () =>{
+            axios.post('/api/tweet/count', {username : username})
+            .then(res => {
+                setTweetCount(res.data.count)
+            })
+            .catch(err => console.log(err))
+        }
+        
         getProfile();
         getTweetCount()
-    }, [props.auth, getProfile, getTweetCount])
+    }, [])
     return(
         user && profile && follow!=null?
         <Container>
